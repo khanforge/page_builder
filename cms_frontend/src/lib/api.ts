@@ -1,9 +1,13 @@
 export const API_BASE_URL = "http://localhost:8000";
 
+/* ===================== AUTH ===================== */
+
 export async function loginUser(username: string, password: string) {
   const res = await fetch(`${API_BASE_URL}/auth/api/token/`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({ username, password }),
   });
 
@@ -25,6 +29,7 @@ export function logoutUser() {
 }
 
 export function getAccessToken() {
+  if (typeof window === "undefined") return null;
   return localStorage.getItem("access");
 }
 
@@ -33,47 +38,51 @@ export function isAuthenticated() {
   return !!localStorage.getItem("access");
 }
 
-export function getAuthHeaders() {
-  const token = localStorage.getItem("access"); // assuming JWT stored in localStorage
-  return token ? { Authorization: `Bearer ${token}` } : {};
+/* ===================== HEADERS (FIXED) ===================== */
+
+export function getAuthHeaders(): HeadersInit {
+  const headers = new Headers();
+  headers.set("Content-Type", "application/json");
+
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("access");
+    if (token) {
+      headers.set("Authorization", `Bearer ${token}`);
+    }
+  }
+
+  return headers;
 }
 
-// Optional: fetch user pages
+/* ===================== API CALLS ===================== */
+
 export async function fetchUserPages() {
   const res = await fetch(`${API_BASE_URL}/cms/api/page/`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...getAuthHeaders(),
-    },
+    headers: getAuthHeaders(),
   });
 
   if (!res.ok) throw new Error("Failed to fetch pages");
   return res.json();
 }
 
-export async function fetchPageComponents(pageId: string|number) {
-  const res = await fetch(`${API_BASE_URL}/cms/api/component/?page=${pageId}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...getAuthHeaders(),
+export async function fetchPageComponents(pageId: string | number) {
+  const res = await fetch(
+    `${API_BASE_URL}/cms/api/component/?page=${pageId}`,
+    {
+      headers: getAuthHeaders(),
     }
-  });
-  if (!res.ok) throw new Error("Failed to fetch component")
+  );
+
+  if (!res.ok) throw new Error("Failed to fetch component");
   return res.json();
 }
 
-export async function createComponent(
-  pageId: string,
-  payload: any
-) {
+export async function createComponent(pageId: string, payload: any) {
   const res = await fetch(
     `${API_BASE_URL}/cms/api/${pageId}/components/create`,
     {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        ...getAuthHeaders(),
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(payload),
     }
   );
@@ -82,32 +91,35 @@ export async function createComponent(
 }
 
 export async function fetchComponent(id: string) {
-  const res = await fetch(`${API_BASE_URL}/cms/api/component/${id}/`);
+  const res = await fetch(`${API_BASE_URL}/cms/api/component/${id}/`, {
+    headers: getAuthHeaders(),
+  });
+
+  if (!res.ok) throw new Error("Fetch component failed");
   return res.json();
 }
 
-export async function updateComponent(
-  id: string,
-  payload: any
-) {
-  const res = await fetch(`${API_BASE_URL}/cms/api/components/${id}/update/`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+export async function updateComponent(id: string, payload: any) {
+  const res = await fetch(
+    `${API_BASE_URL}/cms/api/components/${id}/update/`,
+    {
+      method: "PUT",
+      headers: getAuthHeaders(),
+      body: JSON.stringify(payload),
+    }
+  );
 
   if (!res.ok) throw new Error("Update failed");
 }
 
 export const handleDelete = async (pageId: number) => {
-      await fetch(
-        `${API_BASE_URL}/cms/api/page/${pageId}/`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            ...getAuthHeaders(),
-          }
-        }
-      );
+  const res = await fetch(
+    `${API_BASE_URL}/cms/api/page/${pageId}/`,
+    {
+      method: "DELETE",
+      headers: getAuthHeaders(),
     }
+  );
+
+  if (!res.ok) throw new Error("Delete failed");
+};
