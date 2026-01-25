@@ -7,6 +7,14 @@ import { Switch } from "@/components/ui/switch";
 
 const contentTypes = ["text", "list", "numbered_list", "image", "link"];
 
+type SubComponent = {
+  id?: string
+  title: string
+  slug?: string
+  order?: number
+}
+
+
 export default function ComponentForm({
   pageId,
   initialData,
@@ -18,7 +26,7 @@ export default function ComponentForm({
 }) {
   const [title, setTitle] = useState(initialData?.title ?? "");
   const [isActive, setIsActive] = useState(initialData?.is_active ?? true);
-  const [subcomponents, setSubcomponents] = useState(
+  const [subcomponents, setSubcomponents] = useState<SubComponent[]>(
     initialData?.subcomponents ?? []
   );
 
