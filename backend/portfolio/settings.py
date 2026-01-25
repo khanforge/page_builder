@@ -173,3 +173,9 @@ STATIC_ROOT = BASE_DIR/"staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = MEDIA_URL/"media"
+
+try :
+    from .local_settings import *
+except:
+    pass
+
