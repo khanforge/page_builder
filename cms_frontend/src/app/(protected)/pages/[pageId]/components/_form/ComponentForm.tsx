@@ -5,68 +5,131 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 
-const contentTypes = ["text", "list", "numbered_list", "image", "link"];
+/* -------------------- TYPES -------------------- */
+
+type ContentType =
+  | "text"
+  | "list"
+  | "numbered_list"
+  | "image"
+  | "link";
+
+const contentTypes: ContentType[] = [
+  "text",
+  "list",
+  "numbered_list",
+  "image",
+  "link",
+];
+
+type ContentBlock = {
+  content_type: ContentType;
+  data: string | string[];
+};
 
 type SubComponent = {
-  id?: string
-  title: string
-  slug?: string
-  order?: number
-}
+  id?: string;
+  title: string;
+  slug?: string;
+  order?: number;
+  is_active: boolean;
+  content: ContentBlock[];
+};
 
+type ComponentFormProps = {
+  pageId: string;
+  initialData?: {
+    title?: string;
+    is_active?: boolean;
+    subcomponents?: SubComponent[];
+  };
+  onSubmit: (payload: any) => Promise<void>;
+};
+
+/* -------------------- COMPONENT -------------------- */
 
 export default function ComponentForm({
   pageId,
   initialData,
   onSubmit,
-}: {
-  pageId: string;
-  initialData?: any;
-  onSubmit: (payload: any) => Promise<void>;
-}) {
-  const [title, setTitle] = useState(initialData?.title ?? "");
-  const [isActive, setIsActive] = useState(initialData?.is_active ?? true);
+}: ComponentFormProps) {
+  const [title, setTitle] = useState<string>(initialData?.title ?? "");
+  const [isActive, setIsActive] = useState<boolean>(
+    initialData?.is_active ?? true
+  );
+
   const [subcomponents, setSubcomponents] = useState<SubComponent[]>(
     initialData?.subcomponents ?? []
   );
 
+  /* -------------------- HELPERS -------------------- */
+
   const addSubcomponent = () => {
-    setSubcomponents([
-      ...subcomponents,
-      { title: "", is_active: true, content: [] },
+    setSubcomponents((prev) => [
+      ...prev,
+      {
+        title: "",
+        is_active: true,
+        content: [],
+      },
     ]);
   };
 
-  const updateSubcomponent = (i: number, key: string, val: any) => {
-    const copy = [...subcomponents];
-    copy[i][key] = val;
-    setSubcomponents(copy);
+  const updateSubcomponent = <
+    K extends keyof SubComponent
+  >(
+    index: number,
+    key: K,
+    value: SubComponent[K]
+  ) => {
+    setSubcomponents((prev) => {
+      const copy = [...prev];
+      copy[index] = { ...copy[index], [key]: value };
+      return copy;
+    });
   };
 
   const addContent = (si: number) => {
-    const copy = [...subcomponents];
-    copy[si].content.push({ content_type: "text", data: "" });
-    setSubcomponents(copy);
+    setSubcomponents((prev) => {
+      const copy = [...prev];
+      copy[si] = {
+        ...copy[si],
+        content: [
+          ...copy[si].content,
+          { content_type: "text", data: "" },
+        ],
+      };
+      return copy;
+    });
   };
 
-  const updateContent = (
+  const updateContent = <
+    K extends keyof ContentBlock
+  >(
     si: number,
     ci: number,
-    key: string,
-    val: any
+    key: K,
+    value: ContentBlock[K]
   ) => {
-    const copy = [...subcomponents];
-    copy[si].content[ci][key] = val;
-    setSubcomponents(copy);
+    setSubcomponents((prev) => {
+      const copy = [...prev];
+      const content = [...copy[si].content];
+      content[ci] = { ...content[ci], [key]: value };
+      copy[si] = { ...copy[si], content };
+      return copy;
+    });
   };
 
   const addListItem = (si: number, ci: number) => {
-    const copy = [...subcomponents];
-    if (!Array.isArray(copy[si].content[ci].data)) {
-      copy[si].content[ci].data = [];
-    }
-    copy[si].content[ci].data.push("");
-    setSubcomponents(copy);
+    setSubcomponents((prev) => {
+      const copy = [...prev];
+      const block = copy[si].content[ci];
+
+      const data = Array.isArray(block.data) ? block.data : [];
+      block.data = [...data, ""];
+
+      return copy;
+    });
   };
 
   async function handleSubmit() {
@@ -77,6 +140,8 @@ export default function ComponentForm({
       subcomponents,
     });
   }
+
+  /* -------------------- UI -------------------- */
 
   return (
     <div className="space-y-6 max-w-3xl">
@@ -91,7 +156,7 @@ export default function ComponentForm({
         Active
       </div>
 
-      {subcomponents.map((sub, si) => (
+      {subcomponents.map((sub: SubComponent, si: number) => (
         <div key={si} className="border p-4 rounded space-y-3">
           <Input
             placeholder="Subcomponent title"
@@ -101,23 +166,30 @@ export default function ComponentForm({
             }
           />
 
-          {sub.content.map((c, ci) => (
+          {sub.content.map((c: ContentBlock, ci: number) => (
             <div key={ci} className="border-l pl-4 space-y-2">
               <select
                 value={c.content_type}
                 onChange={(e) =>
-                  updateContent(si, ci, "content_type", e.target.value)
+                  updateContent(
+                    si,
+                    ci,
+                    "content_type",
+                    e.target.value as ContentType
+                  )
                 }
               >
                 {contentTypes.map((t) => (
-                  <option key={t}>{t}</option>
+                  <option key={t} value={t}>
+                    {t}
+                  </option>
                 ))}
               </select>
 
               {(c.content_type === "text" ||
                 c.content_type === "link") && (
                 <Input
-                  value={c.data}
+                  value={c.data as string}
                   onChange={(e) =>
                     updateContent(si, ci, "data", e.target.value)
                   }
@@ -133,17 +205,20 @@ export default function ComponentForm({
                         key={ii}
                         value={item}
                         onChange={(e) => {
-                          const copy = [...subcomponents];
-                          copy[si].content[ci].data[ii] =
-                            e.target.value;
-                          setSubcomponents(copy);
+                          const value = e.target.value;
+                          setSubcomponents((prev) => {
+                            const copy = [...prev];
+                            const data = [
+                              ...(copy[si].content[ci].data as string[]),
+                            ];
+                            data[ii] = value;
+                            copy[si].content[ci].data = data;
+                            return copy;
+                          });
                         }}
                       />
                     ))}
-                  <Button
-                    size="sm"
-                    onClick={() => addListItem(si, ci)}
-                  >
+                  <Button size="sm" onClick={() => addListItem(si, ci)}>
                     Add Item
                   </Button>
                 </div>
