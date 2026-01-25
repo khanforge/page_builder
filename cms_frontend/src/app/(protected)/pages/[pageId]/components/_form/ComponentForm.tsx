@@ -59,8 +59,9 @@ export default function ComponentForm({
   );
 
   const [subcomponents, setSubcomponents] = useState<SubComponent[]>(
-    initialData?.subcomponents ?? []
+    () => (initialData?.subcomponents as SubComponent[]) ?? []
   );
+
 
   /* -------------------- HELPERS -------------------- */
 
