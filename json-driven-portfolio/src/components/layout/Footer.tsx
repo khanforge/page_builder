@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 /**
  * Footer - Academic portfolio footer component
  */
-const Footer = () => {
+const Footer = ({profileInfo}) => {
   const currentYear = new Date().getFullYear();
 
   return (
@@ -55,7 +55,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className="mt-8 pt-6 border-t border-border/30 text-center">
           <p className="text-sm text-muted-foreground">
-            © {currentYear} Dr. Anurag Singh. All rights reserved.
+            © {currentYear} {profileInfo?.user.first_name} {profileInfo?.user.last_name}. All rights reserved.
           </p>
         </div>
       </div>

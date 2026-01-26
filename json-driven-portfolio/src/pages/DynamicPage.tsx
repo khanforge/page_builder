@@ -49,7 +49,7 @@ const DynamicPage = () => {
     <div className="min-h-screen flex flex-col">
       <Navigation navItems={data} />
       <PageRenderer />
-      <Footer />
+      <Footer profileInfo={ data } />
     </div>
   );
 };
