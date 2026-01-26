@@ -16,10 +16,10 @@ const Footer = ({profileInfo}) => {
               to="/" 
               className="inline-block font-display text-xl font-semibold text-foreground hover:text-accent transition-colors mb-2"
             >
-              Dr. Anurag Singh
+              {profileInfo?.user.first_name} {profileInfo?.user.last_name}
             </Link>
             <p className="text-muted-foreground text-sm">
-              Assistant Professor, NIT Delhi
+              NIT Delhi
             </p>
           </div>
           
