@@ -54,7 +54,8 @@ class ComponentModelViewSet(ModelViewSet):
         queryset = Component.objects.all()
         if page_id:
             return queryset.filter(
-                page_id = page_id
+                page_id = page_id,
+                is_active = 1
             )
         return queryset
 
@@ -73,6 +74,7 @@ class CreateComponentAPIView(APIView):
         component = Component.objects.create(
             page=page,
             title=data["title"],
+            layout = data["layout"],
             is_active=data.get("is_active", True),
         )
 
@@ -107,13 +109,13 @@ class CreateComponentAPIView(APIView):
 class UpdateComponentAPIView(APIView):
     def put(self, request, component_id, *args, **kwargs):
         data = request.data
-
+        print(data)
         component = get_object_or_404(Component, id=component_id)
-
         with transaction.atomic():
             # 1️⃣ Update component fields
             component.title = data.get("title", component.title)
             component.is_active = data.get("is_active", component.is_active)
+            component.layout = data.get("layout")
             component.save()
 
             # 2️⃣ Update links (clear & recreate)

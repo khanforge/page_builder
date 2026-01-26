@@ -21,7 +21,7 @@ export default function CreatePageDialog({ onCreate }: CreatePageDialogProps) {
   const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
+  console.log(getAuthHeaders())
   async function handleCreate() {
     if (!title) {
       setError("Title is required");
@@ -36,13 +36,10 @@ export default function CreatePageDialog({ onCreate }: CreatePageDialogProps) {
 
       const res = await fetch(`${API_BASE_URL}/cms/api/page/`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...getAuthHeaders(),
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify(payload),
       });
-
+      
       if (!res.ok) {
         const data = await res.json();
         // show backend validation errors
@@ -52,7 +49,7 @@ export default function CreatePageDialog({ onCreate }: CreatePageDialogProps) {
           "Failed to create page";
         throw new Error(message);
       }
-
+      
       // Reset form
       setTitle("");
 

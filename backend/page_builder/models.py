@@ -61,11 +61,24 @@ class Page(models.Model):
         super().save(*args, **kwargs)
 
 class Component(models.Model):
+    choices=[
+            ("publications", "Publications"),
+            ("cards", "Cards"),
+            ("grid", "Grid"),
+            ("timeline", "Timeline"),
+            ("showcase", "Showcase"),
+            ("centered", "Centered"),
+            ("links", "Links"),
+            ("default", "Default"),
+        ]
     page = models.ForeignKey(Page, on_delete=models.CASCADE, related_name="components")
     title = models.CharField(max_length=200)
     slug = models.SlugField(blank=True, null=True)
     link = models.ManyToManyField(Link, blank=True)
     order = models.SmallIntegerField(default=0)
+    layout = models.CharField(
+        choices=choices, default='default'
+    )
     is_active = models.BooleanField(default=True)
 
     class Meta:
@@ -114,7 +127,7 @@ class ContentBlock(models.Model):
         default="text"
     )
 
-    data = models.TextField(blank=True, null=True)
+    data = models.JSONField(blank=True, null=True)
     order = models.SmallIntegerField(default=0)
     is_active = models.BooleanField(default=True)
 

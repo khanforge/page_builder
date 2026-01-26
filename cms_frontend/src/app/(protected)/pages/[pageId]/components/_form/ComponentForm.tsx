@@ -22,6 +22,27 @@ const contentTypes: ContentType[] = [
   "link",
 ];
 
+type ComponentChoiceLayout =
+  | "publications"
+  | "cards"
+  | "grid"
+  | "timeline"
+  // | "showcase"
+  | "centered"
+  | "links"
+  | "default";
+
+const ComponentChoiceLayout: ComponentChoiceLayout[] = [
+  "publications",
+  "cards",
+  "grid",
+  "timeline",
+  // "showcase",
+  "centered",
+  "links",
+  "default",
+];
+
 type ContentBlock = {
   content_type: ContentType;
   data: string | string[];
@@ -40,6 +61,7 @@ type ComponentFormProps = {
   pageId: string;
   initialData?: {
     title?: string;
+    layout?: ComponentChoiceLayout;
     is_active?: boolean;
     subcomponents?: SubComponent[];
   };
@@ -54,6 +76,11 @@ export default function ComponentForm({
   onSubmit,
 }: ComponentFormProps) {
   const [title, setTitle] = useState<string>(initialData?.title ?? "");
+
+  const [layout, setLayout] = useState<ComponentChoiceLayout>(
+    initialData?.layout ?? "default"
+  );
+
   const [isActive, setIsActive] = useState<boolean>(
     initialData?.is_active ?? true
   );
@@ -61,8 +88,7 @@ export default function ComponentForm({
   const [subcomponents, setSubcomponents] = useState<SubComponent[]>(
     () => (initialData?.subcomponents as SubComponent[]) ?? []
   );
-
-
+  {console.log(initialData)}
   /* -------------------- HELPERS -------------------- */
 
   const addSubcomponent = () => {
@@ -76,9 +102,7 @@ export default function ComponentForm({
     ]);
   };
 
-  const updateSubcomponent = <
-    K extends keyof SubComponent
-  >(
+  const updateSubcomponent = <K extends keyof SubComponent>(
     index: number,
     key: K,
     value: SubComponent[K]
@@ -104,9 +128,7 @@ export default function ComponentForm({
     });
   };
 
-  const updateContent = <
-    K extends keyof ContentBlock
-  >(
+  const updateContent = <K extends keyof ContentBlock>(
     si: number,
     ci: number,
     key: K,
@@ -125,10 +147,8 @@ export default function ComponentForm({
     setSubcomponents((prev) => {
       const copy = [...prev];
       const block = copy[si].content[ci];
-
       const data = Array.isArray(block.data) ? block.data : [];
       block.data = [...data, ""];
-
       return copy;
     });
   };
@@ -137,6 +157,7 @@ export default function ComponentForm({
     await onSubmit({
       page_id: Number(pageId),
       title,
+      layout,
       is_active: isActive,
       subcomponents,
     });
@@ -151,6 +172,24 @@ export default function ComponentForm({
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
+
+      {/* Layout Choice */}
+      <div className="space-y-1">
+        <label className="text-sm font-medium">Layout</label>
+        <select
+          value={layout}
+          onChange={(e) =>
+            setLayout(e.target.value as ComponentChoiceLayout)
+          }
+          className="w-full border rounded px-2 py-1"
+        >
+          {ComponentChoiceLayout.map((l) => (
+            <option key={l} value={l}>
+              {l}
+            </option>
+          ))}
+        </select>
+      </div>
 
       <div className="flex gap-2 items-center">
         <Switch checked={isActive} onCheckedChange={setIsActive} />
@@ -179,6 +218,7 @@ export default function ComponentForm({
                     e.target.value as ContentType
                   )
                 }
+                className="border rounded px-2 py-1"
               >
                 {contentTypes.map((t) => (
                   <option key={t} value={t}>
@@ -234,6 +274,7 @@ export default function ComponentForm({
       ))}
 
       <Button onClick={addSubcomponent}>Add Subcomponent</Button>
+
       <Button onClick={handleSubmit}>
         {initialData ? "Update Component" : "Create Component"}
       </Button>

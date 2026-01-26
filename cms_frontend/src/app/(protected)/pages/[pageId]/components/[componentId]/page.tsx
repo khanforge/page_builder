@@ -17,6 +17,7 @@ export default function EditComponentPage() {
     async function load() {
       const apiData = await fetchComponent(componentId as string);
       const normalized = normalizeComponent(apiData);
+      console.log(normalized);
       setInitialData(normalized);
       setLoading(false);
     }

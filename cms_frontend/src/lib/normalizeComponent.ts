@@ -2,6 +2,7 @@ export function normalizeComponent(apiData: any) {
   return {
     title: apiData.title,
     is_active: apiData.is_active,
+    layout: apiData.layout,
     subcomponents: apiData.sub_components.map((sc: any) => ({
       id: sc.id,
       title: sc.title,
@@ -16,6 +17,7 @@ export function normalizeComponent(apiData: any) {
         ) {
           try {
             parsedData = JSON.parse(cb.data.replace(/'/g, '"'));
+            console.log("file = ", parsedData);
           } catch {
             parsedData = [];
           }
