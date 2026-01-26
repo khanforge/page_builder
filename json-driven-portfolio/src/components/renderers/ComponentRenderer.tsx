@@ -87,7 +87,7 @@ const ComponentRenderer = ({ component, pageTitle, pageMeta, profile, isFirst }:
             {component.title}
           </h2>
           <div className="space-y-4">
-            {activeSubComponents.map((subComponent, index) => (
+            {component.sub_components.map((subComponent, index) => (
               <div 
                 key={subComponent.id}
                 className="animate-fade-in-up opacity-0"
@@ -111,7 +111,7 @@ const ComponentRenderer = ({ component, pageTitle, pageMeta, profile, isFirst }:
             {component.title}
           </h2>
           <div className="max-w-4xl">
-            {activeSubComponents.map((subComponent, index) => (
+            {component.sub_components.map((subComponent, index) => (
               <div 
                 key={subComponent.id}
                 className="animate-fade-in-up opacity-0"
@@ -135,7 +135,7 @@ const ComponentRenderer = ({ component, pageTitle, pageMeta, profile, isFirst }:
             {component.title}
           </h2>
           <div className="grid md:grid-cols-2 gap-8">
-            {activeSubComponents.map((subComponent, index) => (
+            {component.sub_components.map((subComponent, index) => (
               <div 
                 key={subComponent.id}
                 className="animate-fade-in-up opacity-0"
@@ -156,7 +156,7 @@ const ComponentRenderer = ({ component, pageTitle, pageMeta, profile, isFirst }:
       <section id={sectionId} className="portfolio-section scroll-mt-nav">
         <div className="portfolio-container">
           <div className="grid lg:grid-cols-2 gap-16 items-start">
-            {activeSubComponents.map((subComponent, index) => (
+            {component.sub_components.map((subComponent, index) => (
               <div 
                 key={subComponent.id}
                 className="animate-fade-in-up opacity-0"
@@ -180,7 +180,7 @@ const ComponentRenderer = ({ component, pageTitle, pageMeta, profile, isFirst }:
             {component.title}
           </h2>
           <div className="max-w-3xl">
-            {activeSubComponents.map((subComponent, index) => (
+            {component.sub_components.map((subComponent, index) => (
               <div 
                 key={subComponent.id}
                 className="animate-fade-in-up opacity-0"
@@ -204,7 +204,7 @@ const ComponentRenderer = ({ component, pageTitle, pageMeta, profile, isFirst }:
             {component.title}
           </h2>
           <div>
-            {activeSubComponents.map((subComponent, index) => (
+            {component.sub_components.map((subComponent, index) => (
               <div 
                 key={subComponent.id}
                 className="showcase-item animate-fade-in-up opacity-0"
@@ -228,7 +228,7 @@ const ComponentRenderer = ({ component, pageTitle, pageMeta, profile, isFirst }:
             <h2 className="text-foreground mb-8 animate-fade-in opacity-0">
               {component.title}
             </h2>
-            {activeSubComponents.map((subComponent, index) => (
+            {component.sub_components.map((subComponent, index) => (
               <div 
                 key={subComponent.id}
                 className="animate-fade-in-up opacity-0"
@@ -252,7 +252,7 @@ const ComponentRenderer = ({ component, pageTitle, pageMeta, profile, isFirst }:
             <h2 className="text-foreground mb-8 animate-fade-in opacity-0">
               {component.title}
             </h2>
-            {activeSubComponents.map((subComponent, index) => (
+            {component.sub_components.map((subComponent, index) => (
               <div 
                 key={subComponent.id}
                 className="animate-fade-in-up opacity-0"
@@ -278,7 +278,7 @@ const ComponentRenderer = ({ component, pageTitle, pageMeta, profile, isFirst }:
         
         {/* Render all active subcomponents */}
         <div className="max-w-4xl">
-          {activeSubComponents.map((subComponent, index) => (
+          {component.sub_components.map((subComponent, index) => (
             <div 
               key={subComponent.id}
               className="animate-fade-in-up opacity-0"

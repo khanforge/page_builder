@@ -1,21 +1,18 @@
-import { useParams } from 'react-router-dom';
-import PageRenderer from '@/components/renderers/PageRenderer';
+import { redirect, useParams } from 'react-router-dom';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
-import { fetchPages } from '@/lib/api';
+import { fetchPageSlugs } from '@/lib/api';
 import { useEffect, useState } from 'react';
+import PageRenderer from '@/components/renderers/PageRenderer';
 
 const DynamicPage = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const currentSlug = slug || '';
-
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadPages = async () => {
       try {
-        const res = await fetchPages();
+        const res = await fetchPageSlugs();
         setData(res);
         console.log(data);
       } catch (e) {
@@ -31,13 +28,12 @@ const DynamicPage = () => {
     return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
   }
 
-  const page = data.find(p => p.slug === currentSlug);
-  console.log(page)
+  console.log(data)
 
-  if (!page) {
+  if (!data) {
     return (
       <div className="min-h-screen flex flex-col">
-        <Navigation pages={data} />
+        <Navigation navItems={data}/>
         <main className="flex-1 flex items-center justify-center pt-nav">
           <div className="text-center portfolio-container">
             <h1 className="text-4xl font-medium mb-4">Page Not Found</h1>
@@ -51,8 +47,8 @@ const DynamicPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Navigation pages={data} />
-      <PageRenderer page={page} />
+      <Navigation navItems={data} />
+      <PageRenderer />
       <Footer />
     </div>
   );

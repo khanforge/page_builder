@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { CMSData } from '@/types/cms';
 import { Menu, X } from 'lucide-react';
+import { redirect } from 'react-router-dom';
 
-interface NavigationProps {
-  pages: CMSData; // array of pages from backend
-}
 
 /**
  * Navigation - Dynamic navigation component
@@ -13,28 +10,12 @@ interface NavigationProps {
  * - Component slugs drive smooth scrolling within the page
  * - Responsive design with mobile menu
  */
-const Navigation = ({ pages }: NavigationProps) => {
+const Navigation = ({ navItems }) => {
   const location = useLocation();
   const currentPath = location.pathname;
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Determine current page based on URL
-  const currentPage = pages.find(p => {
-    const path = p.slug === '' ? '/' : `/${p.slug}`;
-    return currentPath === path;
-  }) || pages[0]; // fallback to first page
-
-  // Active sections of the current page for in-page navigation
-  const sections = currentPage?.components?.filter(c => c.is_active && c.title) || [];
-
-  // Smooth scroll to section
-  const scrollToSection = (slug: string) => {
-    const element = document.getElementById(slug);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-    setMobileMenuOpen(false);
-  };
+  const pages = navItems?.result;
+  const user = navItems?.user;
 
   return (
     <nav className="fixed top-0 left-0 right-0 h-nav glass border-b border-border/50 z-50">
@@ -44,7 +25,7 @@ const Navigation = ({ pages }: NavigationProps) => {
           to="/" 
           className="font-display text-xl font-semibold text-foreground hover:text-accent transition-colors"
         >
-          Dr. Anurag Singh
+          {user?.first_name} {user?.last_name}
         </Link>
 
         {/* Desktop Menu */}
@@ -67,7 +48,7 @@ const Navigation = ({ pages }: NavigationProps) => {
             );
           })}
 
-          {/* Sections of current page */}
+          {/* Sections of current page
           {sections.map(section => (
             <li key={section.id}>
               <button
@@ -77,7 +58,7 @@ const Navigation = ({ pages }: NavigationProps) => {
                 {section.title}
               </button>
             </li>
-          ))}
+          ))} */}
         </ul>
 
         {/* Mobile Menu Button */}
@@ -111,7 +92,7 @@ const Navigation = ({ pages }: NavigationProps) => {
             })}
 
             {/* Section links */}
-            {sections.map(section => (
+            {/* {sections.map(section => (
               <li key={section.id}>
                 <button
                   onClick={() => scrollToSection(section.slug || section.title.toLowerCase().replace(/\s+/g, '-'))}
@@ -120,7 +101,7 @@ const Navigation = ({ pages }: NavigationProps) => {
                   {section.title}
                 </button>
               </li>
-            ))}
+            ))} */}
           </ul>
         </div>
       )}

@@ -25,6 +25,13 @@ export interface Component {
   sub_components: SubComponent[];
 }
 
+export interface User{
+  username: string,
+  email: string,
+  first_name:string,
+  last_name:string,
+}
+
 export interface Profile {
   id: number;
   image: string | null;
@@ -34,13 +41,18 @@ export interface Profile {
   org_short_name?: string;
   address?: string;
   badge?: string;
-  user?: number;
+  user?: User;
   link?: number[];
 }
 
 export interface PageMeta {
   description?: string;
   subtitle?: string;
+}
+
+export interface Section{
+  slug: string;
+  title: string;
 }
 
 export interface Page {
@@ -52,6 +64,8 @@ export interface Page {
   keyword?: string | null;
   footer?: string | null;
   components: Component[];
+  section_slugs: Section[];
 }
 
-export type CMSData = Page[];
+
+export type CMSData = Page;
