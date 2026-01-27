@@ -94,12 +94,13 @@ class CreateComponentAPIView(APIView):
             )
 
             for cidx, content in enumerate(sub.get("content", [])):
-                ContentBlock.objects.create(
-                    subcomponent=subcomponent,
-                    content_type=content["content_type"],
-                    data=content.get("data"),
-                    order=cidx
-                )
+                if content.get("data"):
+                    ContentBlock.objects.create(
+                        subcomponent=subcomponent,
+                        content_type=content["content_type"],
+                        data=content.get("data"),
+                        order=cidx
+                    )
 
         return Response(
             {"message": "Component created successfully"},
