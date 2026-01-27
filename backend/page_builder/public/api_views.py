@@ -23,7 +23,7 @@ class PageAPIView(APIView):
             slug = slug
         )
         print(profil_slug, slug)
-        serialized = self.serializer_class(page_qs, many=True)
+        serialized = self.serializer_class(page_qs, many=True, context = {"request": request})
         return Response(serialized.data, status=status.HTTP_200_OK)
 
 import logging

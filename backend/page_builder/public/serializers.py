@@ -4,6 +4,7 @@ from page_builder.models import Profile, Page, Component, SubComponent, ContentB
 
 class ProfileModelSeializer(serializers.ModelSerializer):
     user = serializers.SerializerMethodField()
+    image = serializers.SerializerMethodField()
     class Meta:
         model = Profile
         fields = "__all__"
@@ -19,6 +20,13 @@ class ProfileModelSeializer(serializers.ModelSerializer):
             "first_name": user.first_name,
             "last_name": user.last_name,
         }
+    
+    def get_image(self, obj):
+        request = self.context.get("request")
+        if obj.image:
+            return request.build_absolute_uri(obj.image.url)
+        return None
+
 
 class ContentBlockModelSeializer(serializers.ModelSerializer):
     class Meta:
