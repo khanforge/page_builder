@@ -141,13 +141,14 @@ class UpdateComponentAPIView(APIView):
                 )
 
                 for cidx, content in enumerate(sub.get("content", [])):
-                    ContentBlock.objects.create(
-                        subcomponent=subcomponent,
-                        content_type=content["content_type"],
-                        data=content.get("data"),
-                        order=cidx,
-                        is_active=content.get("is_active", True)
-                    )
+                    if content.get("data"):
+                        ContentBlock.objects.create(
+                            subcomponent=subcomponent,
+                            content_type=content["content_type"],
+                            data=content.get("data"),
+                            order=cidx,
+                            is_active=content.get("is_active", True)
+                        )
 
         return Response(
             {"message": "Component updated successfully"},
