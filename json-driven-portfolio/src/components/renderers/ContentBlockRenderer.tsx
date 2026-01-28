@@ -144,7 +144,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
 
       // Default text
       return (
-        <p className="content-block text-muted-foreground text-base md:text-lg leading-relaxed">
+        <p className="content-block text-justify leading-relaxed break-words hyphens-auto text-muted-foreground text-base md:text-lg">
           {textData}
         </p>
       );

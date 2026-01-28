@@ -198,6 +198,11 @@ const SubComponentRenderer = ({ subComponent, layout = 'default' }: SubComponent
   if (layout === 'publications') {
     return (
       <div className="space-y-4">
+        {subComponent.title && (
+          <h3 className="text-foreground mb-4">
+            {subComponent.title}
+          </h3>
+        )}
         {activeBlocks.map(block => (
           <ContentBlockRenderer key={block.id} block={block} variant="publications" />
         ))}
