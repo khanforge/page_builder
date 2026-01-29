@@ -1,11 +1,16 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactStrictMode: true,
   images: {
-    domains: ['backend.pagebuilder.dpdns.org'],
-  }
+    remotePatterns: [
+      {
+        protocol: 'http',                     // Use 'http' since your src URL is http
+        hostname: 'backend.pagebuilder.dpdns.org',
+        pathname: '/**',                      // Allow all paths under this hostname
+      },
+    ],
+  },
 };
 
 export default nextConfig;
