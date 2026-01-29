@@ -3,8 +3,11 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from django.shortcuts import get_object_or_404
+from django.db import transaction
 from page_builder.models import Profile, Page, Component, SubComponent, ContentBlock
 from common.models import Link
+from .helpers import parse_data
 from .serializers import (
     ProfileModelSeializer, 
     PageModelSeializer, 
@@ -13,8 +16,6 @@ from .serializers import (
     ContentBlockModelSeializer, 
 )
 
-from django.shortcuts import get_object_or_404
-from django.db import transaction
 # Create your views here.
 
 class ProfileModelViewSet(ModelViewSet):
@@ -95,12 +96,13 @@ class CreateComponentAPIView(APIView):
 
             for cidx, content in enumerate(sub.get("content", [])):
                 if content.get("data"):
-                    ContentBlock.objects.create(
+                    instance = ContentBlock.objects.create(
                         subcomponent=subcomponent,
                         content_type=content["content_type"],
                         data=content.get("data"),
                         order=cidx
                     )
+                    parse_data(instance.id)
 
         return Response(
             {"message": "Component created successfully"},
@@ -142,13 +144,14 @@ class UpdateComponentAPIView(APIView):
 
                 for cidx, content in enumerate(sub.get("content", [])):
                     if content.get("data"):
-                        ContentBlock.objects.create(
+                        instance = ContentBlock.objects.create(
                             subcomponent=subcomponent,
                             content_type=content["content_type"],
                             data=content.get("data"),
                             order=cidx,
                             is_active=content.get("is_active", True)
                         )
+                        parse_data(instance.id)
 
         return Response(
             {"message": "Component updated successfully"},
