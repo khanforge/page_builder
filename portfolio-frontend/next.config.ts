@@ -5,11 +5,15 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'http',                     // Use 'http' since your src URL is http
+        protocol: 'http',
         hostname: 'backend.pagebuilder.dpdns.org',
-        pathname: '/**',                      // Allow all paths under this hostname
+        pathname: '/**',
       },
     ],
+  },
+  experimental: {
+    // Disable Turbopack for production builds
+    turbo: false,
   },
 };
 
