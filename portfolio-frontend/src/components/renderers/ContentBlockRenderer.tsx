@@ -100,53 +100,53 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
       // Timeline date variant
       if (variant === 'timeline-date') {
         return (
-          <p className="timeline-date">
+          <div className="timeline-date">
             <div dangerouslySetInnerHTML={{ __html: textData }} />
-          </p>
+          </div>
         );
       }
       
       // Hero text - larger
       if (variant === 'hero') {
         return (
-          <p className="text-lg md:text-xl text-muted-foreground max-w-xl">
+          <div className="text-lg md:text-xl text-muted-foreground max-w-xl">
             <div dangerouslySetInnerHTML={{ __html: textData }} />
-          </p>
+          </div>
         );
       }
       
       // Centered text
       if (variant === 'centered') {
         return (
-          <p className="text-lg text-muted-foreground">
+          <div className="text-lg text-muted-foreground">
             <div dangerouslySetInnerHTML={{ __html: textData }} />
-          </p>
+          </div>
         );
       }
       
       // Split layout text
       if (variant === 'split') {
         return (
-          <p className="text-lg text-muted-foreground leading-relaxed">
+          <div className="text-lg text-muted-foreground leading-relaxed">
             <div dangerouslySetInnerHTML={{ __html: textData }} />
-          </p>
+          </div>
         );
       }
       
       // Showcase text
       if (variant === 'showcase') {
         return (
-          <p className="text-lg text-muted-foreground">
+          <div className="text-lg text-muted-foreground">
             <div dangerouslySetInnerHTML={{ __html: textData }} />
-          </p>
+        div </div>
         );
       }
 
       // Default text
       return (
-        <p className="content-block text-justify leading-relaxed break-words hyphens-auto text-muted-foreground text-base md:text-lg">
+        <div className="content-block text-justify leading-relaxed break-words hyphens-auto text-muted-foreground text-base md:text-lg">
             <div dangerouslySetInnerHTML={{ __html: textData }} />
-        </p>
+        </div>
       );
 
     case 'list':
@@ -160,9 +160,9 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
         return (
           <div className="flex flex-wrap gap-2">
             {listItems.map((item, index) => (
-              <span key={index} className="tech-tag">
+              <div key={index} className="tech-tag">
                 <div dangerouslySetInnerHTML={{ __html: item }} />
-              </span>
+              </div>
             ))}
           </div>
         );
@@ -177,9 +177,9 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
                 <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-accent/10 text-accent text-sm font-semibold flex items-center justify-center">
                   {index + 1}
                 </span>
-                <p className="text-muted-foreground text-sm leading-relaxed pt-1">
+                <div className="text-muted-foreground text-sm leading-relaxed pt-1">
                   <div dangerouslySetInnerHTML={{ __html: item }} />
-                </p>
+                </div>
               </li>
             ))}
           </ol>
@@ -219,12 +219,13 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
           {listItems.map((item, index) => (
             <li key={index} className="flex items-start gap-3">
               <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2.5 flex-shrink-0" />
-              <span className="text-base leading-relaxed">
+              <div className="text-base leading-relaxed [&_a]:text-accent [&_a:hover]:opacity-80">
                 <div dangerouslySetInnerHTML={{ __html: item }} />
-              </span>
+              </div>
             </li>
           ))}
         </ul>
+
       );
 
     case 'numbered_list':
