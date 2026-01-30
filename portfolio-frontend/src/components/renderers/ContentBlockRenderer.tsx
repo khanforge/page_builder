@@ -101,7 +101,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
       if (variant === 'timeline-date') {
         return (
           <p className="timeline-date">
-            {textData}
+            <div dangerouslySetInnerHTML={{ __html: textData }} />
           </p>
         );
       }
