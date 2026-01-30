@@ -8,7 +8,7 @@ import json
 
 class Command(BaseCommand):
     file_path = Path(settings.BASE_DIR) / "page_builder/management/commands/data.html"
-    page_slug = "home"
+    page_slug = "about"
     profile_slug = "anurag"
     
     def handle(self, *args, **kwargs):
@@ -36,7 +36,7 @@ class Command(BaseCommand):
                     pass
                 component = Component.objects.create(
                     page = page,
-                    title = self.component_title,
+                    title = title,
                     layout = "publications",
 
                 )
