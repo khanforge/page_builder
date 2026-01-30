@@ -220,7 +220,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
             <li key={index} className="flex items-start gap-3">
               <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2.5 flex-shrink-0" />
               <span className="text-base leading-relaxed">
-                  <div dangerouslySetInnerHTML={{ __html: item }} />
+                <div dangerouslySetInnerHTML={{ __html: item }} />
               </span>
             </li>
           ))}
