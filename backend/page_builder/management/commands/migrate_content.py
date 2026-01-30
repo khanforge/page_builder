@@ -38,7 +38,7 @@ class Command(BaseCommand):
             sub_component = SubComponent.objects.create(
                 component = component,
             )
-            list_data = [li.text.strip() for li in li_tags if li and li.text.strip()]
+            list_data = [li.decode_contents().strip() for li in li_tags if li and li.decode_contents().strip()]
             content_block = ContentBlock.objects.create(
                 subcomponent = sub_component,
                 content_type = "list",
