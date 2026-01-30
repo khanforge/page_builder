@@ -37,6 +37,7 @@ class Command(BaseCommand):
                 component = Component.objects.create(
                     page = page,
                     title = title,
+                    
                     layout = "publications",
 
                 )
