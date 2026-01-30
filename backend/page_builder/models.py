@@ -77,7 +77,7 @@ class Component(models.Model):
     link = models.ManyToManyField(Link, blank=True)
     order = models.SmallIntegerField(default=0)
     layout = models.CharField(
-        choices=choices, default='default'
+        choices=choices, default='default', max_length=50
     )
     is_active = models.BooleanField(default=True)
 
