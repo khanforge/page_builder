@@ -41,22 +41,23 @@ class Command(BaseCommand):
                 profile=profile,
             )
 
+            
+            # Component title
+            title_tag = soup.find("h2")
+            component_title = title_tag.get_text(strip=True) if title_tag else "Untitled"
+
+            component, created = Component.objects.get_or_create(
+                page=page,
+                title=component_title,
+                defaults={
+                    "layout": "publications",
+                },
+            )
+
+            if not created:
+                self.stdout.write(f"Component '{component_title}' already exists, skipping")
+
             for div in div_blocks:
-                # Component title
-                title_tag = div.find("h2")
-                component_title = title_tag.get_text(strip=True) if title_tag else "Untitled"
-
-                component, created = Component.objects.get_or_create(
-                    page=page,
-                    title=component_title,
-                    defaults={
-                        "layout": "publications",
-                    },
-                )
-
-                if not created:
-                    self.stdout.write(f"Component '{component_title}' already exists, skipping")
-                    continue
 
                 sub_component = SubComponent.objects.create(component=component)
 
@@ -66,7 +67,7 @@ class Command(BaseCommand):
                     sub_component.title = sub_title_tag.get_text(strip=True)
                     sub_component.save()
 
-                li_tags = div.find_all("li")
+                li_tags = div.find_all("p")
 
                 list_data = [
                     normalize_whitespace(li.decode_contents())
@@ -75,7 +76,7 @@ class Command(BaseCommand):
                 ]
 
                 if not list_data:
-                    self.stdout.write(f"No list items found for '{component_title}', skipping")
+                    self.stdout.write(f"No list items found for '{sub_title_tag}', skipping")
                     continue
 
                 content_block = ContentBlock.objects.create(
