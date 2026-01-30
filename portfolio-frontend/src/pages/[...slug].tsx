@@ -13,7 +13,7 @@ const DynamicPage = () => {
   const [footer, setFooter] = useState<{first_name?:string, last_name?:string}>({first_name:"", last_name:""})
 
   useEffect(() => {
-    const loadPages = async () => {
+    const loadNavData = async () => {
       try {
         const res = await fetchPageSlugs();
         setData(res);
@@ -25,7 +25,7 @@ const DynamicPage = () => {
         setLoading(false);
       }
     };
-    loadPages();
+    loadNavData();
   }, []);
 
   if (loading) {

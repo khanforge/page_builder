@@ -20,7 +20,7 @@ const PageRenderer = () => {
   // Scroll tracking for active section
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 120; // Offset for nav
+      const scrollPosition = window.scrollY + 140; // Offset for nav
 
       for (let i = sectionSlugs.length - 1; i >= 0; i--) {
         const section = sectionSlugs[i];
@@ -52,8 +52,6 @@ const PageRenderer = () => {
 
   // Fetch page data
   useEffect(() => {
-    if (!slug) return; // wait until slug is available
-
     const loadPage = async () => {
       setLoading(true);
       try {

@@ -22,23 +22,26 @@ class PageAPIView(APIView):
             profile__slug = profil_slug,
             slug = slug
         )
-        print(profil_slug, slug)
         serialized = self.serializer_class(page_qs, many=True, context = {"request": request})
         return Response(serialized.data, status=status.HTTP_200_OK)
 
-import logging
-logger = logging.getLogger(__name__)
 class PageSlugAPIView(APIView):
     def get(self, request, *args, **kwargs):
-        profil_slug = kwargs.get("profile_slug")
+        profile_slug = kwargs.get("profile_slug")
         page_qs = Page.objects.filter(
-            profile__slug = profil_slug
+            profile__slug = profile_slug
         )
-        print(profil_slug)
+
+        if not page_qs.exists():
+            return Response(
+                {"detail": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
+            )
+
         res = [{
             "slug": page.slug,
+            "title": page.title
         } for page in page_qs]
-        print(res)
+
         res = {
             "result": res,
             "user":{
