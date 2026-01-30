@@ -57,7 +57,7 @@ const PageRenderer = () => {
       try {
         const res = await fetchPages(slug as string);
         setPage(res);
-        setSectionSlugs(res.section_slugs || []);
+        setSectionSlugs(res?.section_slugs || []);
       } catch (e) {
         console.error("Error fetching page:", e);
       } finally {

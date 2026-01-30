@@ -110,7 +110,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
       if (variant === 'hero') {
         return (
           <p className="text-lg md:text-xl text-muted-foreground max-w-xl">
-            {textData}
+            <div dangerouslySetInnerHTML={{ __html: textData }} />
           </p>
         );
       }
@@ -119,7 +119,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
       if (variant === 'centered') {
         return (
           <p className="text-lg text-muted-foreground">
-            {textData}
+            <div dangerouslySetInnerHTML={{ __html: textData }} />
           </p>
         );
       }
@@ -128,7 +128,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
       if (variant === 'split') {
         return (
           <p className="text-lg text-muted-foreground leading-relaxed">
-            {textData}
+            <div dangerouslySetInnerHTML={{ __html: textData }} />
           </p>
         );
       }
@@ -137,7 +137,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
       if (variant === 'showcase') {
         return (
           <p className="text-lg text-muted-foreground">
-            {textData}
+            <div dangerouslySetInnerHTML={{ __html: textData }} />
           </p>
         );
       }
@@ -145,7 +145,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
       // Default text
       return (
         <p className="content-block text-justify leading-relaxed break-words hyphens-auto text-muted-foreground text-base md:text-lg">
-          {textData}
+            <div dangerouslySetInnerHTML={{ __html: textData }} />
         </p>
       );
 
@@ -161,7 +161,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
           <div className="flex flex-wrap gap-2">
             {listItems.map((item, index) => (
               <span key={index} className="tech-tag">
-                {item}
+                <div dangerouslySetInnerHTML={{ __html: item }} />
               </span>
             ))}
           </div>
@@ -178,7 +178,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
                   {index + 1}
                 </span>
                 <p className="text-muted-foreground text-sm leading-relaxed pt-1">
-                  {item}
+                  <div dangerouslySetInnerHTML={{ __html: item }} />
                 </p>
               </li>
             ))}
@@ -219,7 +219,9 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
           {listItems.map((item, index) => (
             <li key={index} className="flex items-start gap-3">
               <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2.5 flex-shrink-0" />
-              <span className="text-base leading-relaxed">{item}</span>
+              <span className="text-base leading-relaxed">
+                  <div dangerouslySetInnerHTML={{ __html: item }} />
+              </span>
             </li>
           ))}
         </ul>
@@ -255,7 +257,9 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
               <span className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 text-accent text-xs font-semibold flex items-center justify-center">
                 {index + 1}
               </span>
-              <span className="text-base leading-relaxed pt-0.5">{item}</span>
+              <span className="text-base leading-relaxed pt-0.5">
+                <div dangerouslySetInnerHTML={{ __html: item }} />
+              </span>
             </li>
           ))}
         </ol>
