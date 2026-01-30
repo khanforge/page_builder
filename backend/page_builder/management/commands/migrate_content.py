@@ -10,7 +10,7 @@ class Command(BaseCommand):
     file_path = Path(settings.BASE_DIR) / "page_builder/management/commands/data.html"
     page_slug = "home"
     profile_slug = "anurag"
-    component_title = "Recent Publications"
+    component_title = "Miscellaneous links"
     
     def handle(self, *args, **kwargs):
         with open(self.file_path, 'r') as file:
