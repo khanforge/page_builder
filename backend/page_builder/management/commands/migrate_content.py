@@ -18,11 +18,19 @@ def normalize_whitespace(html: str) -> str:
 class Command(BaseCommand):
     help = "Import HTML content and create components with normalized list data"
 
-    file_path = Path(settings.BASE_DIR) / "page_builder/management/commands/data.html"
+    file_path = Path(settings.BASE_DIR) / "page_builder/management/commands/"
     page_slug = "about"
     profile_slug = "anurag"
 
-    def handle(self, *args, **kwargs):
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--file",
+            type=str,
+            default = "data.html"
+        )
+
+    def handle(self, *args, **options):
+        self.file_path = self.file_path / options['file']
         if not self.file_path.exists():
             self.stderr.write(f"File not found: {self.file_path}")
             return
@@ -68,6 +76,9 @@ class Command(BaseCommand):
                     sub_component.save()
 
                 li_tags = div.find_all("p")
+                if li_tags == []:
+                    li_tags = div.find_all("li")
+                
 
                 list_data = [
                     normalize_whitespace(li.decode_contents())
