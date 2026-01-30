@@ -34,7 +34,7 @@ class PageSlugAPIView(APIView):
 
         if not page_qs.exists():
             return Response(
-                {"detail": "Profile not found"}, status=status.HTTP_404_NOT_FOUND
+                {"detail": f"No page found for {profile_slug}"}, status=status.HTTP_404_NOT_FOUND
             )
 
         res = [{
