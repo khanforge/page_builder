@@ -1,0 +1,71 @@
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+# --- Django ---
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+
+# Django migrations (optional – usually keep them!)
+**/migrations/
+!**/migrations/__init__.py
+
+# --- Environment variables ---
+.env
+.env.*
+!.env.example
+
+# --- Virtual environments ---
+venv/
+env/
+.venv/
+ENV/
+
+# --- Packaging ---
+*.egg-info/
+dist/
+build/
+
+# --- Testing / coverage ---
+.coverage
+coverage.xml
+htmlcov/
+.pytest_cache/
+.tox/
+
+# --- IDEs / editors ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- OS files ---
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+*.log
+
+# --- Celery ---
+celerybeat-schedule
+celerybeat.pid
+
+# --- PyCharm ---
+*.iml
+
+# --- SQLite ---
+*.sqlite3
+
+# Python bytecode
+*.pyc
+__pycache__/
+
+# Ignore migration caches
+**/migrations/__pycache__/
+
