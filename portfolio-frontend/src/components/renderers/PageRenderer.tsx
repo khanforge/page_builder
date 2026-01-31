@@ -75,7 +75,20 @@ const PageRenderer = ({ page }: { page: Page }) => {
               "sameAs": page?.profile?.link || undefined, // optional: social links
             }),
           }}
+          
         />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": page.section_slugs.map((section, index) => ({
+              "@type": "ListItem",
+              position: index + 1,
+              name: section.title,
+              item: `https://portfolio-seven-virid-20.vercel.app//${section.slug}`
+            }))
+          })
+        }} />
       </Head>
       {/* Section Nav */}
       {sectionSlugs?.length > 0 && (
