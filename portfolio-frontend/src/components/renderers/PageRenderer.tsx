@@ -136,7 +136,6 @@ const PageRenderer = ({ page }: { page: Page }) => {
                         width={500}
                         height={500}
                         className="rounded-3xl object-cover"
-                        fill
                         priority
                       />
                     </div>
