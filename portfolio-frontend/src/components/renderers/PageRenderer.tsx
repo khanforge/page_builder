@@ -89,6 +89,7 @@ const PageRenderer = ({ page }: { page: Page }) => {
             }))
           })
         }} />
+        <link rel="canonical" href={`https://portfolio-seven-virid-20.vercel.app/${page.slug}`} />
       </Head>
       {/* Section Nav */}
       {sectionSlugs?.length > 0 && (
