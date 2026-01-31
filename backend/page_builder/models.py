@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from common.models import CommonTimeModel
+from common.models import CommonTimeStampModel
 from datetime import datetime
 from .utils import build_meta_description, build_title
 
@@ -63,7 +63,7 @@ def manage_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user = instance)
 
-class Page(CommonTimeModel):
+class Page(CommonTimeStampModel):
     title = models.TextField(blank=True, null=True)
     slug = models.SlugField(blank=True, null=True)
     keyword = models.CharField(max_length=200, blank=True, null=True)

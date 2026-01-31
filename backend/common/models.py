@@ -44,8 +44,8 @@ class CommonTimeModel(models.Model):
         abstract = True
 
 class CommonTimeStampModel(CommonTimeModel):
-    added_by = models.ForeignKey('auth.User', on_delete = models.CASCADE, related_name='+', null=True, blank=True)
-    modified_on_by = models.ForeignKey('auth.User', on_delete = models.CASCADE, related_name='+', null=True, blank=True)
+    added_by = models.ForeignKey('auth.User', on_delete = models.CASCADE, null=True, blank=True)
+    modified_on_by = models.ForeignKey('auth.User', on_delete = models.CASCADE, null=True, blank=True)
 
     class Meta:
         abstract = True
