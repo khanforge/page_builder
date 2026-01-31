@@ -93,14 +93,14 @@ class Page(CommonTimeStampModel):
         self.modified_on = datetime.now()
         if not self.added_on:
             self.added_on = datetime.now()
-        self.update(updated_fields = ["modified_on", "added_on"])
+        self.save(updated_fields = ["modified_on", "added_on"])
     
     def update_author(self, user):
         if self.added_by:
             self.added_by = self.page.profile.user
         
         self.updated_by = user
-        self.save()
+        self.save(updated_fields = ["added_by", "updated_by"])
 
     @property
     def get_page_title(self):
