@@ -100,7 +100,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
       // Timeline date variant
       if (variant === 'timeline-date') {
         return (
-          <div className="timeline-date">
+          <div className="timeline-date [&_a]:text-accent [&_a:hover]:opacity-80">
             <div dangerouslySetInnerHTML={{ __html: textData }} />
           </div>
         );
@@ -109,7 +109,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
       // Hero text - larger
       if (variant === 'hero') {
         return (
-          <div className="text-lg md:text-xl text-muted-foreground max-w-xl">
+          <div className="text-lg md:text-xl text-muted-foreground max-w-xl [&_a]:text-accent [&_a:hover]:opacity-80">
             <div dangerouslySetInnerHTML={{ __html: textData }} />
           </div>
         );
@@ -118,7 +118,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
       // Centered text
       if (variant === 'centered') {
         return (
-          <div className="text-lg text-muted-foreground">
+          <div className="text-lg text-muted-foreground [&_a]:text-accent [&_a:hover]:opacity-80">
             <div dangerouslySetInnerHTML={{ __html: textData }} />
           </div>
         );
@@ -138,7 +138,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
         return (
           <div className="text-lg text-muted-foreground">
             <div dangerouslySetInnerHTML={{ __html: textData }} />
-        div </div>
+         </div>
         );
       }
 
@@ -177,7 +177,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
                 <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-accent/10 text-accent text-sm font-semibold flex items-center justify-center">
                   {index + 1}
                 </span>
-                <div className="text-muted-foreground text-sm leading-relaxed pt-1">
+                <div className="text-muted-foreground text-sm leading-relaxed pt-1 [&_a]:text-accent [&_a:hover]:opacity-80">
                   <div dangerouslySetInnerHTML={{ __html: item }} />
                 </div>
               </li>
@@ -258,7 +258,7 @@ const ContentBlockRenderer = ({ block, variant = 'default' }: ContentBlockRender
               <span className="flex-shrink-0 w-6 h-6 rounded-full bg-accent/10 text-accent text-xs font-semibold flex items-center justify-center">
                 {index + 1}
               </span>
-              <span className="text-base leading-relaxed pt-0.5">
+              <span className="text-base leading-relaxed pt-0.5 [&_a]:text-accent [&_a:hover]:opacity-80">
                 <div dangerouslySetInnerHTML={{ __html: item }} />
               </span>
             </li>

@@ -240,7 +240,7 @@ export default function ComponentForm({
 
               {(c.content_type === "list" ||
                 c.content_type === "numbered_list") && (
-                <div className="space-y-1">
+                <div className="space-y-1 space-x-1">
                   {Array.isArray(c.data) &&
                     c.data.map((item: string, ii: number) => (
                       <RichTextEditor
