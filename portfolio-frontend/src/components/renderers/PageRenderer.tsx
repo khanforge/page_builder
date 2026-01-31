@@ -55,7 +55,7 @@ const PageRenderer = ({ page }: { page: Page }) => {
     
     <>
       <Head>
-        <title>{page.seo_title}</title>
+        <title>{page?.seo_title}</title>
         <meta name="description" content={page.seo_description} />
         {/* JSON-LD structured data */}
         <script
@@ -78,7 +78,7 @@ const PageRenderer = ({ page }: { page: Page }) => {
         />
       </Head>
       {/* Section Nav */}
-      {sectionSlugs.length > 0 && (
+      {sectionSlugs?.length > 0 && (
         <nav className="fixed top-20 left-0 right-0 h-15 bg-muted/80 backdrop-blur-md border-b border-border/30 z-40">
           <div className="portfolio-container h-full overflow-x-auto scrollbar-hide">
             <ul className="hidden md:flex justify-center items-center gap-1 h-full py-3">

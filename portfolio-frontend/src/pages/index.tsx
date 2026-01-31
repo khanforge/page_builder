@@ -1,7 +1,15 @@
-import DynamicPage from "./[...slug]";
+// src/pages/index.tsx
+import { GetServerSideProps } from 'next';
 
-export default function Home() {
-  return (
-    <DynamicPage page={{ profile: { first_name: '', last_name: '' }, sections: [] }} />
-  );
+export const getServerSideProps: GetServerSideProps = async () => {
+  return {
+    redirect: {
+      destination: '/home', // your default CMS home slug
+      permanent: false,
+    },
+  };
+};
+
+export default function Index() {
+  return null;
 }
