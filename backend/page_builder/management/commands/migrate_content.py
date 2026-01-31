@@ -19,7 +19,6 @@ class Command(BaseCommand):
     help = "Import HTML content and create components with normalized list data"
 
     file_path = Path(settings.BASE_DIR) / "page_builder/management/commands/"
-    page_slug = "about"
     profile_slug = "anurag"
 
     def add_arguments(self, parser):
@@ -40,19 +39,26 @@ class Command(BaseCommand):
 
         soup = BeautifulSoup(html_data, "html.parser")
         div_blocks = soup.find_all("div")
+        page_title = soup.find("section").get_text(strip=True) if soup.find("section") else None
+        if not page_title:
+            self.stderr.write("No page name found in <section> tag")
+            return
 
         profile = Profile.objects.get(slug=self.profile_slug)
 
         with transaction.atomic():
             page, _ = Page.objects.get_or_create(
-                slug=self.page_slug,
+                title=page_title,
                 profile=profile,
             )
 
             
             # Component title
             title_tag = soup.find("h2")
-            component_title = title_tag.get_text(strip=True) if title_tag else "Untitled"
+            component_title = title_tag.get_text(strip=True) if title_tag else None
+
+            if not component_title:
+                self.stderr.write("No Component title Found")
 
             component, created = Component.objects.get_or_create(
                 page=page,
