@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import RichTextEditor from "@/components/RichTextEditor";
 
 /* -------------------- TYPES -------------------- */
 
@@ -229,10 +230,10 @@ export default function ComponentForm({
 
               {(c.content_type === "text" ||
                 c.content_type === "link") && (
-                <Input
+                <RichTextEditor
                   value={c.data as string}
-                  onChange={(e) =>
-                    updateContent(si, ci, "data", e.target.value)
+                  onChange={(html) =>
+                    updateContent(si, ci, "data", html)
                   }
                 />
               )}
@@ -242,11 +243,11 @@ export default function ComponentForm({
                 <div className="space-y-1">
                   {Array.isArray(c.data) &&
                     c.data.map((item: string, ii: number) => (
-                      <Input
+                      <RichTextEditor
                         key={ii}
                         value={item}
-                        onChange={(e) => {
-                          const value = e.target.value;
+                        onChange={(html) => {
+                          const value = html;
                           setSubcomponents((prev) => {
                             const copy = [...prev];
                             const data = [
