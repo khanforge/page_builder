@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from django.utils.text import slugify
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from common.models import CommonTimeModel
+from datetime import datetime
+from .utils import build_meta_description, build_title
 
 # Create your models here.
 class Profile(models.Model):
@@ -33,17 +36,43 @@ class Profile(models.Model):
         self.slug = slug
         super().save(*args, **kwargs)
 
+    @property
+    def get_username(self):
+        return self.user.username
+    
+    @property
+    def get_full_name(self):
+        return f"{self.user.first_name} {self.user.last_name}".strip() or self.get_username
+    
+    @property
+    def get_email(self):
+        return self.user.email
+    
+    @property
+    def get_image_url(self):
+        if self.image and hasattr(self.image, 'url'):
+            return self.image.url
+        return None
+    
+    @property
+    def get_all_links(self):
+        return self.link.all()
+
 @receiver(post_save, sender = User)
 def manage_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user = instance)
 
-class Page(models.Model):
+class Page(CommonTimeModel):
     title = models.TextField(blank=True, null=True)
     slug = models.SlugField(blank=True, null=True)
     keyword = models.CharField(max_length=200, blank=True, null=True)
     footer = models.CharField(max_length=255, blank=True, null=True)
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    seo_title = models.CharField(max_length=255, blank=True, null=True)
+    seo_description = models.TextField()
+    is_active = models.BooleanField(default=True)
+
 
     def __str__(self):
         return f"{self.slug}"
@@ -59,6 +88,27 @@ class Page(models.Model):
 
         self.slug = slug
         super().save(*args, **kwargs)
+
+    def update_updated_on(self):
+        self.modified_on = datetime.now()
+        if not self.added_on:
+            self.added_on = datetime.now()
+        self.update(updated_fields = ["modified_on", "added_on"])
+    
+    def update_author(self, user):
+        if self.added_by:
+            self.added_by = self.page.profile.user
+        
+        self.updated_by = user
+        self.save()
+
+    @property
+    def get_page_title(self):
+        return build_title(self, self.profile.user)
+    
+    @property
+    def get_page_description(self):
+        return build_meta_description(self, self.profile.user)
 
 class Component(models.Model):
     choices=[
@@ -92,7 +142,7 @@ class Component(models.Model):
         slug = base_slug
         counter = 1
 
-        while Page.objects.filter(slug=slug, id=self.page_id).exclude(pk=self.pk).exists():
+        while Component.objects.filter(slug=slug, page__id=self.page_id).exclude(pk=self.pk).exists():
             slug = f"{base_slug}-{counter}"
             counter += 1
 

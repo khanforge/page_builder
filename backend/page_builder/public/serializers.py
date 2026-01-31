@@ -49,6 +49,8 @@ class PageModelSeializer(serializers.ModelSerializer):
     components = ComponentModelSeializer(many=True, read_only=True, required=False)
     profile = ProfileModelSeializer(read_only=True)
     section_slugs = serializers.SerializerMethodField()
+    seo_title = serializers.SerializerMethodField()
+    seo_description = serializers.SerializerMethodField()
     class Meta:
         model = Page
         fields = "__all__"
@@ -64,4 +66,9 @@ class PageModelSeializer(serializers.ModelSerializer):
         } for component in components]
         return slugs
 
+    def get_seo_title(self, obj):
+        return obj.get_page_title
+
+    def get_seo_description(self, obj):
+        return obj.get_page_description
 

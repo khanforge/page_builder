@@ -12,5 +12,3 @@ def parse_data(content_block_id=None, all=False):
             filtered = [item.strip() for item in data if item.strip() != '']
             block.data = filtered
             block.save()
-
-    

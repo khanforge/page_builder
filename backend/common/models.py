@@ -35,3 +35,17 @@ class Contact(models.Model):
 
     def __str__(self):
         return f"{self.label} {self.value} {str(id)}"
+
+class CommonTimeModel(models.Model):
+    added_on = models.DateTimeField(auto_now_add=True)
+    modified_on = models.DateTimeField(auto_now = True)
+
+    class Meta:
+        abstract = True
+
+class CommonTimeStampModel(CommonTimeModel):
+    added_by = models.ForeignKey('auth.User', on_delete = models.CASCADE, related_name='+', null=True, blank=True)
+    modified_on_by = models.ForeignKey('auth.User', on_delete = models.CASCADE, related_name='+', null=True, blank=True)
+
+    class Meta:
+        abstract = True

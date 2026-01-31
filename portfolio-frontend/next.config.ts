@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         hostname: 'backend.pagebuilder.dpdns.org',
         pathname: '/**',                      // Allow all paths under this hostname
       },
+      {
+        protocol: 'http',                     // Use 'http' since your src URL is http
+        hostname: 'lvh.me',
+        pathname: '/**',                      // Allow all paths under this hostname
+      },
     ],
   },
 };

@@ -1,26 +1,27 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import type { Page } from "@/types/cms";
 import ComponentRenderer from "./ComponentRenderer";
 import { fetchPages } from "@/lib/api";
 import Image from "next/image";
+import Head from 'next/head';
 
 /**
- * PageRenderer - Renders a complete page with all its components
+ * PageRenderer - SSR version (layout unchanged)
  */
-const PageRenderer = () => {
-  const router = useRouter();
-  const { slug } = router.query; // Next.js dynamic slug
-  const [page, setPage] = useState<Page | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+const PageRenderer = ({ page }: { page: Page }) => {
   const [sectionSlugs, setSectionSlugs] = useState<any[]>([]);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState<string>("");
 
-  // Scroll tracking for active section
+  // init section slugs
+  useEffect(() => {
+    setSectionSlugs(page?.section_slugs || []);
+  }, [page]);
+
+  // Scroll tracking
   useEffect(() => {
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 140; // Offset for nav
+      const scrollPosition = window.scrollY + 140;
 
       for (let i = sectionSlugs.length - 1; i >= 0; i--) {
         const section = sectionSlugs[i];
@@ -36,49 +37,46 @@ const PageRenderer = () => {
     };
 
     window.addEventListener("scroll", handleScroll);
-    handleScroll(); // initial check
+    handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, [sectionSlugs]);
 
-  // Scroll to section when nav item clicked
   const scrollToSection = (slug: string) => {
-    const element = document.getElementById(slug);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
-    }
+    const el = document.getElementById(slug);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
     setMobileMenuOpen(false);
   };
-
-  // Fetch page data
-  useEffect(() => {
-    const loadPage = async () => {
-      setLoading(true);
-      try {
-        const res = await fetchPages(slug as string);
-        setPage(res);
-        setSectionSlugs(res?.section_slugs || []);
-      } catch (e) {
-        console.error("Error fetching page:", e);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    loadPage();
-  }, [slug]);
-
-  // Loading state
-  if (loading || !page) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading…
-      </div>
-    );
+  if (!page) {
+    return <div className="min-h-screen flex items-center justify-center">Page not found</div>;
   }
 
   return (
+    
     <>
+      <Head>
+        <title>{page.seo_title}</title>
+        <meta name="description" content={page.seo_description} />
+        {/* JSON-LD structured data */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "Person",
+              "name": `${page?.profile?.user?.first_name} ${page?.profile?.user?.last_name}`,
+              "jobTitle": page?.profile?.designation,
+              "worksFor": {
+                "@type": "Organization",
+                "name": page?.profile?.organisation,
+              },
+              "url": `https://portfolio-seven-virid-20.vercel.app/${page.slug}`,
+              "image": page?.profile?.image || undefined,
+              "sameAs": page?.profile?.link || undefined, // optional: social links
+            }),
+          }}
+        />
+      </Head>
       {/* Section Nav */}
       {sectionSlugs.length > 0 && (
         <nav className="fixed top-20 left-0 right-0 h-15 bg-muted/80 backdrop-blur-md border-b border-border/30 z-40">
@@ -88,6 +86,7 @@ const PageRenderer = () => {
                 const slug =
                   section.slug || section.title.toLowerCase().replace(/\s+/g, "-");
                 const isActive = activeSection === slug;
+
                 return (
                   <li key={section.id}>
                     <button
@@ -114,87 +113,39 @@ const PageRenderer = () => {
           <header className="hero-section">
             <div className="portfolio-container">
               <div className="grid lg:grid-cols-5 gap-12 lg:gap-16 items-center">
-                {/* Profile Image */}
                 {page.profile.image && (
-                  <div className="lg:col-span-2 animate-fade-in opacity-0">
+                  <div className="lg:col-span-2">
                     <div className="relative max-w-sm mx-auto lg:mx-0">
-                      <div className="absolute inset-0 bg-gradient-to-br from-accent/30 to-purple-500/20 rounded-3xl blur-3xl scale-105" />
                       <Image
-                        src={page.profile.image} // must be a valid URL or imported image
-                        alt={page.title || 'Profile Image'}
-                        width={500}              // specify a width
-                        height={500}             // specify a height
-                        className="relative w-full rounded-3xl shadow-medium object-cover"
+                        src={page.profile.image}
+                        alt={page.title}
+                        width={500}
+                        height={500}
+                        className="rounded-3xl object-cover"
                       />
-                      {page.profile.image_badge && (
-                        <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 text-sm font-medium bg-accent text-white rounded-full shadow-lg whitespace-nowrap">
-                          {page.profile.image_badge}
-                        </span>
-                      )}
                     </div>
                   </div>
                 )}
 
-                {/* Profile Info */}
                 <div className={`${page.profile.image ? "lg:col-span-3" : "lg:col-span-5"}`}>
-                  <h1 className="text-foreground mb-4 animate-fade-in-up opacity-0 stagger-1">
-                    {page.profile.user?.first_name} {page.profile.user?.last_name}
-                  </h1>
-                  <p className="text-xl md:text-2xl text-accent font-medium mb-3 animate-fade-in-up opacity-0 stagger-2">
-                    {page.profile.designation}
-                  </p>
-                  <p className="text-lg text-muted-foreground mb-6 animate-fade-in-up opacity-0 stagger-2">
-                    {page.profile.organisation}
-                  </p>
-                  {page.profile.address && (
-                    <div className="flex items-start gap-3 text-muted-foreground animate-fade-in-up opacity-0 stagger-3">
-                      <svg
-                        className="w-5 h-5 mt-1 text-accent flex-shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                        />
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                      </svg>
-                      <p className="text-sm leading-relaxed">{page.profile.address}</p>
-                    </div>
-                  )}
+                  <h1>{page.profile.user?.first_name} {page.profile.user?.last_name}</h1>
+                  <p className="text-accent">{page.profile.designation}</p>
+                  <p className="text-muted-foreground">{page.profile.organisation}</p>
                 </div>
               </div>
             </div>
           </header>
         )}
 
-        {/* Fallback header if no profile */}
         {!page.profile && (
-          <header className="portfolio-section bg-gradient-to-b from-card to-background">
+          <header className="portfolio-section">
             <div className="portfolio-container">
-              <div className="max-w-4xl">
-                {page.meta?.subtitle && (
-                  <p className="text-accent font-medium mb-4 animate-fade-in opacity-0 text-sm uppercase tracking-widest">
-                    {page.meta.subtitle}
-                  </p>
-                )}
-                <h1 className="text-foreground animate-fade-in-up opacity-0 stagger-1">
-                  {page.title}
-                </h1>
-              </div>
+              <h1>{page.title}</h1>
             </div>
           </header>
         )}
 
-        {/* Render Components */}
+        {/* Components */}
         {page.components.length > 0 ? (
           page.components.map((component, index) => (
             <ComponentRenderer
@@ -209,9 +160,7 @@ const PageRenderer = () => {
         ) : (
           <section className="portfolio-section">
             <div className="portfolio-container">
-              <p className="text-muted-foreground text-lg">
-                This page is currently empty.
-              </p>
+              <p>This page is currently empty.</p>
             </div>
           </section>
         )}

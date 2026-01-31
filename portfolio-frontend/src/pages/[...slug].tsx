@@ -1,26 +1,25 @@
-
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
-import { fetchPageSlugs } from '@/lib/api';
-import { useEffect, useState } from 'react';
 import PageRenderer from '@/components/renderers/PageRenderer';
+import { fetchPages, fetchPageSlugs } from '@/lib/api';
+import { useEffect, useState } from 'react';
 import { NavItems } from '@/types/cms';
 
+interface DynamicPageProps {
+  page: any; // you can type this more specifically
+}
 
-const DynamicPage = () => {
-  const [data, setData] = useState<NavItems>({ result: [], user: {} });
+const DynamicPage = ({ page }: DynamicPageProps) => {
+  const [navData, setNavData] = useState<NavItems>({ result: [], user: {} });
   const [loading, setLoading] = useState(true);
-  const [footer, setFooter] = useState<{first_name?:string, last_name?:string}>({first_name:"", last_name:""})
 
   useEffect(() => {
     const loadNavData = async () => {
       try {
         const res = await fetchPageSlugs();
-        setData(res);
-        setFooter(res.user);
-        console.log(data);
-      } catch (e) {
-        console.error(e);
+        setNavData(res);
+      } catch (err) {
+        console.error(err);
       } finally {
         setLoading(false);
       }
@@ -31,30 +30,53 @@ const DynamicPage = () => {
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
   }
-
-
-  if (!data) {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <Navigation navItems={data}/>
-        <main className="flex-1 flex items-center justify-center pt-nav">
-          <div className="text-center portfolio-container">
-            <h1 className="text-4xl font-medium mb-4">Page Not Found</h1>
-            <a href="/" className="text-accent">← Back to Home</a>
-          </div>
-        </main>
-        <Footer profileInfo={footer}/>
-      </div>
-    );
-  }
-
+  
   return (
     <div className="min-h-screen flex flex-col">
-      <Navigation navItems={data} />
-      <PageRenderer />
-      <Footer profileInfo={ footer } />
+      <Navigation navItems={navData} />
+      
+      {/* Pass the page from getServerSideProps */}
+      
+      <PageRenderer page={page} />
+
+      <Footer profileInfo={navData.user || { first_name: '', last_name: '' }} />
     </div>
   );
 };
 
 export default DynamicPage;
+
+// ---------------------------------
+// SSR function to fetch page data
+// ---------------------------------
+export async function getServerSideProps({ params }: any) {
+  try {
+    // Get slug from URL
+    let slug = params.slug;
+
+    if (Array.isArray(slug)) {
+      slug = slug.join('/'); // e.g., ['research-summary'] -> 'research-summary'
+    }
+    // Treat invalid slugs (starting with . or undefined) as null
+    if (!slug || slug.startsWith('.')) {
+      slug = null;
+    }
+
+    // Fetch page (fetchPages handles null -> home)
+    const page = await fetchPages(slug);
+
+    // If fetchPages returns nothing, mark as not found
+    if (!page) {
+      return { notFound: true };
+    }
+
+    // Return page as props
+    return {
+      props: { page },
+    };
+  } catch (err) {
+    console.error('SSR fetchPages error:', err);
+    return { notFound: true };
+  }
+}
+

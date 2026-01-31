@@ -65,6 +65,8 @@ export interface Page {
   footer?: string | null;
   components: Component[];
   section_slugs: Section[];
+  seo_title: string;
+  seo_description: string;
 }
 
 export interface PageSlugType {

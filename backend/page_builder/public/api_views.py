@@ -11,7 +11,10 @@ from .serializers import (
 
 from django.shortcuts import get_object_or_404
 from django.db import transaction
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
 
+@method_decorator(cache_page(60*10), name='dispatch')
 class PageAPIView(APIView):
     serializer_class = PageModelSeializer 
     permission_classes = [AllowAny]

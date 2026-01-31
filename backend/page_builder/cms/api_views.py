@@ -78,7 +78,8 @@ class CreateComponentAPIView(APIView):
             layout = data["layout"],
             is_active=data.get("is_active", True),
         )
-
+        component.page.update_author(request.user)
+        component.page.update_updated_on()
         for link in data.get("links", []):
             l = Link.objects.create(
                 label=link["label"],
@@ -112,7 +113,6 @@ class CreateComponentAPIView(APIView):
 class UpdateComponentAPIView(APIView):
     def put(self, request, component_id, *args, **kwargs):
         data = request.data
-        print(data)
         component = get_object_or_404(Component, id=component_id)
         with transaction.atomic():
             # 1️⃣ Update component fields
@@ -120,6 +120,8 @@ class UpdateComponentAPIView(APIView):
             component.is_active = data.get("is_active", component.is_active)
             component.layout = data.get("layout")
             component.save()
+            component.page.update_author(request.user)
+            component.page.update_updated_on()
 
             # 2️⃣ Update links (clear & recreate)
             component.link.clear()
