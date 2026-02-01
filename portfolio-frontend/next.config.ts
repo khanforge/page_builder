@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'http',                     // Use 'http' since your src URL is http
+        protocol: 'https',                     // Use 'http' since your src URL is http
         hostname: 'backend.pagebuilder.dpdns.org',
         pathname: '/**',                      // Allow all paths under this hostname
       },
