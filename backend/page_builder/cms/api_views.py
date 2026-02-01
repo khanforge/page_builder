@@ -56,7 +56,6 @@ class ComponentModelViewSet(ModelViewSet):
         if page_id:
             return queryset.filter(
                 page_id = page_id,
-                is_active = 1
             )
         return queryset
 

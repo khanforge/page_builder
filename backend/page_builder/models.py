@@ -89,6 +89,11 @@ class Page(CommonTimeStampModel):
         self.slug = slug
         super().save(*args, **kwargs)
 
+    def delete(self):
+        self.is_active = False
+        self.save(update_fields = ["is_active"])
+
+
     def update_updated_on(self):
         self.modified_on = datetime.now()
         if not self.added_on:

@@ -23,7 +23,8 @@ class PageAPIView(APIView):
         slug = kwargs.get("slug")
         page_qs = Page.objects.filter(
             profile__slug = profil_slug,
-            slug = slug
+            slug = slug,
+            is_active = 1
         )
         serialized = self.serializer_class(page_qs, many=True, context = {"request": request})
         return Response(serialized.data, status=status.HTTP_200_OK)
@@ -32,7 +33,8 @@ class PageSlugAPIView(APIView):
     def get(self, request, *args, **kwargs):
         profile_slug = kwargs.get("profile_slug")
         page_qs = Page.objects.filter(
-            profile__slug = profile_slug
+            profile__slug = profile_slug,
+            is_active=1
         )
 
         if not page_qs.exists():

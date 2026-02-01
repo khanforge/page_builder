@@ -55,11 +55,11 @@ export default function PagesDashboard() {
           {pages.map((page) => (
             <Card
               key={page.id}
-              onClick={() => router.push(`pages/${page.id}`)}
+              onClick={() => page.is_active && router.push(`pages/${page.id}`)}
               className="relative"
             >
               <CardHeader>
-                <Button
+                {page.is_active && <Button
                   variant="ghost"
                   size="icon"
                   className="absolute top-2 right-2 text-destructive"
@@ -74,11 +74,14 @@ export default function PagesDashboard() {
                   }}
                 >
                   <Trash2 className="h-4 w-4" />
-                </Button>
-                <CardTitle className="text-sm">{page.title}</CardTitle>
+                </Button>}
+                {
+                  !page.is_active && <p className="absolute text-red-500 top-2 right-2 text font-bold">❌ Deleted</p>
+                }
+                <CardTitle className={`text-2xl ${!page.is_active && 'text-gray-400'}`}>{page.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-2xl font-bold">{page.slug}</p>
+                <p className={`text-sm font-bold ${!page.is_active && 'text-gray-400'}`}>{page.slug}</p>
               </CardContent>
             </Card>
           ))}
