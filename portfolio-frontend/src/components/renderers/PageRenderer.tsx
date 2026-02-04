@@ -85,7 +85,7 @@ const PageRenderer = ({ page }: { page: Page }) => {
               "@type": "ListItem",
               position: index + 1,
               name: section.title,
-              item: `https://portfolio-seven-virid-20.vercel.app//${section.slug}`
+              item: `https://portfolio-seven-virid-20.vercel.app/${section.slug}`
             }))
           })
         }} />
@@ -138,6 +138,11 @@ const PageRenderer = ({ page }: { page: Page }) => {
                         className="rounded-3xl object-cover"
                         priority
                       />
+                      {page?.profile?.image_badge && (
+                        <span className="absolute -bottom-4 left-1/2 -translate-x-1/2 px-4 py-2 text-sm font-medium bg-accent text-white rounded-full shadow-lg whitespace-nowrap">
+                          {page.profile.image_badge}
+                        </span>
+                      )}
                     </div>
                   </div>
                 )}
